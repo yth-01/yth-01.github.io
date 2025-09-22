@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>누운 실린더 (Z축 길게)</title>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+    <script type="text/javascript" src="https://www.x3dom.org/download/x3dom.js"></script>
+    <style>
+        body { margin: 0; }
+        x3d { width: 100vw; height: 100vh; display: block; }
+    </style>
+</head>
+<body>
+    <x3d>
+        <scene>
+            <!-- 카메라 위치 -->
+            <viewpoint position="0 0 50"></viewpoint>
+
+            <!-- Z축 방향으로 누운 파란 실린더 -->
+            <transform rotation="1 0 0 1.5708"> <!-- X축 기준 90도 회전 -->
+                <shape>
+                    <appearance>
+                        <material diffuseColor="0 0 1"></material>
+                    </appearance>
+                    <cylinder radius="2" height="50"></cylinder> <!-- Z축으로 길게 -->
+                </shape>
+            </transform>
+
+        </scene>
+    </x3d>
+</body>
+</html>

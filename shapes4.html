@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>겹치지만 모두 보이는 4도형 - 중앙</title>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+    <script type="text/javascript" src="https://www.x3dom.org/download/x3dom.js"></script>
+    <style>
+        body { margin: 0; }
+        x3d { width: 100vw; height: 100vh; display: block; }
+    </style>
+</head>
+<body>
+    <x3d>
+        <scene>
+            <!-- 카메라 위치 -->
+            <viewpoint position="0 0 25" centerOfRotation="0 0 0"></viewpoint>
+
+            <!-- 박스 -->
+            <transform>
+                <shape>
+                    <appearance>
+                        <material diffuseColor="1 0 0"></material>
+                    </appearance>
+                    <box size="5 5 5"></box>
+                </shape>
+            </transform>
+
+            <!-- 콘 -->
+            <transform>
+                <shape>
+                    <appearance>
+                        <material diffuseColor="0 1 0"></material>
+                    </appearance>
+                    <cone bottomRadius="3.5" height="5"></cone>
+                </shape>
+            </transform>
+
+            <!-- 실린더 (눕힌 상태) -->
+            <transform rotation="1 0 0 1.5708">
+                <shape>
+                    <appearance>
+                        <material diffuseColor="0 0 1"></material>
+                    </appearance>
+                    <cylinder radius="2.5" height="6"></cylinder>
+                </shape>
+            </transform>
+
+            <!-- 구 (가장 작은 도형) -->
+            <transform>
+                <shape>
+                    <appearance>
+                        <material diffuseColor="1 1 0"></material>
+                    </appearance>
+                    <sphere radius="3"></sphere>
+                </shape>
+            </transform>
+
+        </scene>
+    </x3d>
+</body>
+</html>
