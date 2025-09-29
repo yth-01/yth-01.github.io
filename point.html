@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>정육면체 점(PointSet) 중앙 배치</title>
+    <script type="text/javascript" src="https://www.x3dom.org/download/x3dom.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+    <style>
+        body {
+            margin: 0;
+            background-color: black; /* 배경 검정색 */
+        }
+        x3d {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <x3d>
+        <Scene>
+            <!-- 점만 찍기 -->
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="1 1 1" emissiveColor="1 1 1"></Material> <!-- 흰색 점, emissiveColor로 밝기 증가 -->
+                </Appearance>
+                <PointSet pointSize="15">
+                    <Coordinate point="
+                        -3 -3 -3
+                        -3 -3  3
+                        -3  3 -3
+                        -3  3  3
+                         3 -3 -3
+                         3 -3  3
+                         3  3 -3
+                         3  3  3
+                         0 -3 -3
+                         0 -3  3
+                         0  3 -3
+                         0  3  3
+                    "></Coordinate>
+                </PointSet>
+            </Shape>
+
+            <!-- 중앙에서 보는 카메라 -->
+            <Viewpoint position="0 0 20" centerOfRotation="0 0 0" description="중앙 보기"></Viewpoint>
+        </Scene>
+    </x3d>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>PointSet 예제</title>
+    <script type="text/javascript" src="https://www.x3dom.org/download/x3dom.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+</head>
+<body>
+    <x3d width="800px" height="600px">
+        <Scene>
+            <!-- 점(PointSet) 생성 -->
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="1 0 0"></Material> <!-- 초기 빨강색 -->
+                </Appearance>
+                <PointSet>
+                    <Coordinate point="-3 0 0  0 0 0  3 0 0"></Coordinate>
+                </PointSet>
+            </Shape>
+
+            <!-- 각 점에 개별 색상 적용 (X3DOM은 PointSet 단일 색상만 가능하므로 Shape 별로 나누어야 함) -->
+            <!-- 빨강점 -->
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="1 0 0"></Material>
+                </Appearance>
+                <PointSet>
+                    <Coordinate point="-3 0 0"></Coordinate>
+                </PointSet>
+            </Shape>
+
+            <!-- 초록점 -->
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="0 1 0"></Material>
+                </Appearance>
+                <PointSet>
+                    <Coordinate point="0 0 0"></Coordinate>
+                </PointSet>
+            </Shape>
+
+            <!-- 파랑점 -->
+            <Shape>
+                <Appearance>
+                    <Material diffuseColor="0 0 1"></Material>
+                </Appearance>
+                <PointSet>
+                    <Coordinate point="3 0 0"></Coordinate>
+                </PointSet>
+            </Shape>
+        </Scene>
+    </x3d>
+</body>
+</html>

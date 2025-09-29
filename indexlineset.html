@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>점과 선 예제 - 흰 배경</title>
+    <script type="text/javascript" src="https://www.x3dom.org/download/x3dom.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+    <style>
+        body { margin: 0; background-color: white; }
+        x3d { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+<x3d>
+    <Scene>
+        <!-- 빨강 점 -->
+        <Shape>
+            <Appearance>
+                <Material diffuseColor="1 0 0"></Material>
+            </Appearance>
+            <PointSet pointSize="15">
+                <Coordinate point="-2 0 0"></Coordinate>
+            </PointSet>
+        </Shape>
+
+        <!-- 초록 점 -->
+        <Shape>
+            <Appearance>
+                <Material diffuseColor="0 0.5 0"></Material> <!-- 진한 초록으로 대비 -->
+            </Appearance>
+            <PointSet pointSize="15">
+                <Coordinate point="0 4 0"></Coordinate>
+            </PointSet>
+        </Shape>
+
+        <!-- 파랑 점 -->
+        <Shape>
+            <Appearance>
+                <Material diffuseColor="0 0 1"></Material>
+            </Appearance>
+            <PointSet pointSize="15">
+                <Coordinate point="2 0 0"></Coordinate>
+            </PointSet>
+        </Shape>
+
+        <!-- 세 점을 연결하는 선 -->
+        <Shape>
+            <Appearance>
+                <Material diffuseColor="0 0 0"></Material> <!-- 검은색 선으로 대비 -->
+            </Appearance>
+            <IndexedLineSet coordIndex="0 1 -1 1 2 -1 2 0 -1">
+                <Coordinate point="-2 0 0  0 4 0  2 0 0"></Coordinate>
+            </IndexedLineSet>
+        </Shape>
+
+        <!-- 보기 좋은 카메라 -->
+        <Viewpoint position="0 2 15" description="점과 선 보기"></Viewpoint>
+    </Scene>
+</x3d>
+</body>
+</html>
