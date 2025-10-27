@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>x3dom 삐에로</title>
+  <script src="https://www.x3dom.org/release/x3dom.js"></script>
+  <link rel="stylesheet" href="https://www.x3dom.org/release/x3dom.css">
+  <style>
+    body { background-color: #f0f0f0; text-align: center; }
+    x3d { width: 600px; height: 600px; }
+  </style>
+</head>
+<body>
+  <h2>x3dom 삐에로 모델</h2>
+  <x3d>
+    <scene>
+      <!-- 첫 번째 삐에로 정의 -->
+      <transform translation="0 0 0" rotation="0 1 0 1.57" DEF="face">
+        <!-- 얼굴 -->
+        <transform translation="0 0 0">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 0.8 0.6"></material>
+            </appearance>
+            <sphere radius="1"></sphere>
+          </shape>
+        </transform>
+        <!-- 모자 -->
+        <transform translation="0 1.3 0">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 0 0"></material>
+            </appearance>
+            <cone bottomRadius="0.6" height="1.2"></cone>
+          </shape>
+        </transform>
+        <!-- 눈 왼쪽 -->
+        <transform translation="-0.35 0.3 0.9">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 1 1"></material>
+            </appearance>
+            <sphere radius="0.15"></sphere>
+          </shape>
+          <transform translation="0 0 0.05">
+            <shape>
+              <appearance>
+                <material diffuseColor="0 0 0"></material>
+              </appearance>
+              <sphere radius="0.07"></sphere>
+            </shape>
+          </transform>
+        </transform>
+        <!-- 눈 오른쪽 -->
+        <transform translation="0.35 0.3 0.9">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 1 1"></material>
+            </appearance>
+            <sphere radius="0.15"></sphere>
+          </shape>
+          <transform translation="0 0 0.05">
+            <shape>
+              <appearance>
+                <material diffuseColor="0 0 0"></material>
+              </appearance>
+              <sphere radius="0.07"></sphere>
+            </shape>
+          </transform>
+        </transform>
+        <!-- 코 -->
+        <transform translation="0 0 1">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 0.4 0.4"></material>
+            </appearance>
+            <box size="0.25 0.25 0.25"></box>
+          </shape>
+        </transform>
+        <!-- 입 -->
+        <transform translation="0 -0.5 0.9">
+          <shape>
+            <appearance>
+              <material diffuseColor="0.8 0 0"></material>
+            </appearance>
+            <box size="0.6 0.15 0.1"></box>
+          </shape>
+        </transform>
+        <!-- 귀 왼쪽 -->
+        <transform translation="-0.9 0.5 0" rotation="0 0 1 0.4">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 0.7 0.7"></material>
+            </appearance>
+            <box size="0.2 0.8 0.1"></box>
+          </shape>
+        </transform>
+        <!-- 귀 오른쪽 -->
+        <transform translation="0.9 0.5 0" rotation="0 0 -1 0.4">
+          <shape>
+            <appearance>
+              <material diffuseColor="1 0.7 0.7"></material>
+            </appearance>
+            <box size="0.2 0.8 0.1"></box>
+          </shape>
+        </transform>
+      </transform>
+
+      <!-- 두 번째 삐에로 복제 -->
+      <transform translation="3 0 0">
+        <transform USE="face"></transform>
+      </transform>
+
+      <!-- 세 번째 삐에로 복제 -->
+      <transform translation="-3 0 0">
+        <transform USE="face"></transform>
+      </transform>
+
+    </scene>
+  </x3d>
+</body>
+</html>

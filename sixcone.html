@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>X3DOM 중앙 RGB 박스</title>
+  <!-- x3dom CDN -->
+  <link rel="stylesheet" href="https://www.x3dom.org/release/x3dom.css" />
+  <script src="https://www.x3dom.org/release/x3dom.js"></script>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+    }
+    .scene-container {
+      width: 640px;
+      height: 480px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    }
+    x3d {
+      width: 100%;
+      height: 100%;
+    }
+    .hint {
+      position: fixed;
+      left: 16px;
+      bottom: 12px;
+      color: #ddd;
+      font-size: 13px;
+      font-family: system-ui;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene-container">
+    <x3d id="x3dScene">
+      <scene>
+        <!-- 조명 -->
+        <DirectionalLight direction='-0.5 -1 -0.5' intensity='0.9'></DirectionalLight>
+        <AmbientLight intensity='0.2'></AmbientLight>
+
+        <!-- 🔹 카메라 위치만 조정 -->
+        <!-- 기존 position='0 0 3' → 멀리서 전체를 볼 수 있도록 0 0 10 으로 변경 -->
+        <Viewpoint position='0 0 10' orientation='0 0 0 0' centerOfRotation='0 0 0'></Viewpoint>
+        <NavigationInfo type='"EXAMINE" "ANY"'></NavigationInfo>
+
+        <!-- 박스 그룹 (원본 그대로) -->
+        <Transform DEF='RGB_GROUP' translation='0 0 0' scale='2 2 2'>
+
+         
+
+          
+
+          <!-- 파랑 (앞뒤) -->
+         <Transform translation='3 0 0' scale="1 1 1" rotation="1 0 0 1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          <Transform translation='-3 0 0' scale="1 1 1" rotation="1 0 0 -1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          <Transform translation='0 3 0' scale="1 1 1" rotation="0 1 0 1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          <Transform translation='0 -3 0' scale="1 1 1" rotation="0 1 0 -1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          <Transform translation='0 0 3' scale="1 1 1" rotation="0 0 1 1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          <Transform translation='0 0 -3' scale="1 1 1" rotation="0 0 1 -1.57">
+            <Shape>
+              <Appearance>
+                <Material diffuseColor='1 0 1' specularColor='0.2 0.2 0.2' shininess='0.3'/>
+              </Appearance>
+               <cone bottomRadius='1' height="2"></Box>
+            </Shape>
+          </Transform>
+
+          
+        </Transform>
+
+        <!-- 바닥 평면 (옵션) -->
+        <Transform translation='0 0 0' scale='1 1 1'>
+          <Shape>
+            <Appearance>
+              <Material diffuseColor='0.08 0.08 0.08' transparency='0.0'></Material>
+            </Appearance>
+            <Box size='1 1 1'></Box>
+          </Shape>
+        </Transform>
+
+      </scene>
+    </x3d>
+  </div>
+
+  <div class="hint">마우스로 드래그하여 회전, 휠로 확대/축소</div>
+</body>
+</html>
