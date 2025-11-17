@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>x3dom 배경 + 초록색 콘</title>
+    <script src="https://www.x3dom.org/release/x3dom.js"></script>
+    <link rel="stylesheet" href="https://www.x3dom.org/release/x3dom.css">
+    <style>
+        body { background-color: #222; }
+    </style>
+</head>
+<body>
+    <x3d width="1600px" height="1400px">
+        <scene>
+
+<Background id="bgimg"
+    topUrl="img/topimg.png"
+    bottomUrl="img/bottomimg.png"
+    leftUrl="img/leftimg.png"
+    rightUrl="img/rightimg.png"
+    frontUrl="img/frontimg.png"
+    backUrl="img/backimg.png">
+</Background>
+
+<shape>
+    <appearance>
+        <material diffuseColor="0 1 0"></material>
+    </appearance>
+    <cone height="2" bottomRadius="1"></cone>
+</shape>
+
+        </scene>
+    </x3d>
+</body>
+</html>
