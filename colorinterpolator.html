@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ColorInterpolator</title>
+
+<script src="https://code.jquery.com/jquery-1.7.2.js"></script>
+<script src="https://www.x3dom.org/x3dom/release/x3dom.js"></script>
+<link rel="stylesheet" href="https://www.x3dom.org/x3dom/release/x3dom.css"/>
+
+</head>
+
+<body>
+<h1 style="text-align:center;">ColorInterpolator</h1>
+
+<X3D width="500px" height="400px">
+<Scene>
+
+<NavigationInfo headlight="true" type='"examine" "ANY"'></NavigationInfo>
+
+<Background skyAngle="0 3.14" skyColor=".8 .8 .8 0.6 0.6 0.6"></Background>
+
+<Transform>
+    <Shape>
+        <Sphere radius="1"></Sphere>
+        <Appearance>
+            <Material id="color" diffuseColor="1 1 0"></Material>
+        </Appearance>
+    </Shape>
+</Transform>
+
+<ColorInterpolator id="clrint"
+    key="0 0.25 0.5 0.75 1"
+    keyValue="1 0 1  1 1 0  1 0 0  0 1 0  0 1 1">
+</ColorInterpolator>
+
+<TimeSensor id="time" loop="true" cycleInterval="4"></TimeSensor>
+
+<ROUTE fromNode="time" fromField="fraction_changed"
+       toNode="clrint" toField="set_fraction"></ROUTE>
+
+<ROUTE fromNode="clrint" fromField="value_changed"
+       toNode="color" toField="diffuseColor"></ROUTE>
+
+</Scene>
+</X3D>
+
+</body>
+</html>

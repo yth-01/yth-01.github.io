@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=utf-8'></meta>
+<title>CoordinateInterpolator,Web3D,VR,가상현실,X3D,</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
+<script type='text/javascript' src="http://www.x3dom.org/x3dom/release/x3dom.js"></script>
+<link rel='stylesheet' type='text/css' href="http://www.x3dom.org/x3dom/release/x3dom.css"/>
+</head>
+<body id='main'>
+<h1 style="text-align:center;">CoordinateInterpolator</h1>
+<X3D> <!--showStat='true' showLog='true' -->
+<Scene>
+<NavigationInfo headlight='true' type='"examine" "Any"'></NavigationInfo>
+<Background skyAngle='0 3.14' skyColor='.8 .8 .8 0.6 0.6 0.6'></Background>
+<Transform translation='0 0 0'>
+<Shape><IndexedFaceSet coordIndex='0 1 2 3 -1' solid='true'>
+<coordinate id='coord' point='-1 -1 0, 1 -1 0, 1 1 0, -1 1 0'>
+</coordinate>'
+</IndexedFaceSet>
+<Appearance><Material diffuseColor='1 1 0'></Material>
+</Appearance></Shape></Transform>
+
+<CoordinateInterpolator id='coordint' key='0 0.25 0.5 0.75 1'
+                keyvalue='-1 -1 0, 1 -1 0, 1 1 0, -1 1 0
+                          -2 -1 0, 1 -1 0, 1 1 0, -1 1 0
+                          -2 -1 0, 1 -2 0, 1 2 0, -1 1 0
+                          -2 -1 0, 1 -2 0, 3 2 0, -3 1 0
+                          -2 -2 0, 1 -2 0, 3 3 0, -3 1 0'>
+<TimeSensor id='time' loop='true' cycleInterval='4'></TimeSensor>
+<ROUTE fromNode='time' fromField='fraction_changed'
+toNode='coordint' toField='set_fraction'></ROUTE>
+<ROUTE fromNode='coordint' fromField='value_changed'
+toNode='coord' toField='point'></ROUTE>
+</Scene>
+</X3D>
+</body>
+</html>
