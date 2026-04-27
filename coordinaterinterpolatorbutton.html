@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CoordinateInterpolator</title>
+
+<script src="https://code.jquery.com/jquery-1.7.2.js"></script>
+<script src="https://www.x3dom.org/x3dom/release/x3dom.js"></script>
+<link rel="stylesheet" href="https://www.x3dom.org/x3dom/release/x3dom.css"/>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+#container {
+    width: 100vw;
+    height: 100vh;
+}
+button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    padding: 12px 25px;
+    font-size: 16px;
+}
+</style>
+
+<script>
+let isRunning = false;
+
+function toggleAnimation() {
+    const timeSensor = document.getElementById("time");
+    const btn = document.getElementById("toggleBtn");
+
+    if (!isRunning) {
+        timeSensor.setAttribute("enabled", "true");
+        timeSensor.setAttribute("startTime", Date.now() / 1000);
+        btn.innerText = "⏸ 정지";
+        isRunning = true;
+    } else {
+        timeSensor.setAttribute("enabled", "false");
+        btn.innerText = "▶ 실행";
+        isRunning = false;
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+<button id="toggleBtn" onclick="toggleAnimation()">▶ 실행</button>
+
+<div id="container">
+<X3D width="100%" height="100%">
+<Scene>
+
+<NavigationInfo headlight="true" type='"examine" "ANY"'></NavigationInfo>
+
+<Background skyAngle="0 3.14" skyColor=".8 .8 .8 0.6 0.6 0.6"></Background>
+
+<Transform>
+    <Shape>
+        <IndexedFaceSet coordIndex="0 1 2 3 -1" solid="true">
+            <Coordinate id="coord"
+                point="-1 -1 0  1 -1 0  1 1 0  -1 1 0">
+            </Coordinate>
+        </IndexedFaceSet>
+        <Appearance>
+            <Material diffuseColor="1 1 0"></Material>
+        </Appearance>
+    </Shape>
+</Transform>
+
+<CoordinateInterpolator id="coordint"
+    key="0 0.25 0.5 0.75 1"
+    keyValue="
+    -1 -1 0  1 -1 0  1 1 0  -1 1 0
+    -2 -1 0  1 -1 0  1 1 0  -1 1 0
+    -2 -1 0  1 -2 0  1 2 0  -1 1 0
+    -2 -1 0  1 -2 0  3 2 0  -3 1 0
+    -2 -2 0  1 -2 0  3 3 0  -3 1 0">
+</CoordinateInterpolator>
+
+<TimeSensor id="time" loop="true" enabled="false" cycleInterval="4"></TimeSensor>
+
+<ROUTE fromNode="time" fromField="fraction_changed"
+       toNode="coordint" toField="set_fraction"></ROUTE>
+
+<ROUTE fromNode="coordint" fromField="value_changed"
+       toNode="coord" toField="point"></ROUTE>
+
+</Scene>
+</X3D>
+</div>
+
+</body>
+</html>
