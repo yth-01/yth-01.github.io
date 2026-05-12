@@ -1,49 +1,1183 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>VR 콘텐츠 메뉴</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>염태훈의 수업파일</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Space+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface2: #1a1a28;
+      --accent1: #7c3aed;
+      --accent2: #06b6d4;
+      --accent3: #f59e0b;
+      --text: #e8e8f0;
+      --text-muted: #8888aa;
+      --border: rgba(124, 58, 237, 0.3);
+      --glow: rgba(124, 58, 237, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: sans-serif;
-      background-color: #111;
-      color: #eee;
-      text-align: center;
-      padding-top: 100px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    a {
-      display: block;
-      margin: 20px;
-      font-size: 24px;
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 4rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
       text-decoration: none;
-      color: #00BCD4;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-family: 'Space Mono', monospace;
+      transition: color 0.3s;
+      position: relative;
     }
 
-    a:hover {
-      color: #FFC107;
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent1);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 8rem 4rem 6rem;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.08) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .orb1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+
+    .orb2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%);
+      bottom: -80px; right: -80px;
+      animation: drift 10s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to { transform: translate(40px, 30px) scale(1.1); }
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      max-width: 860px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(6,182,212,0.4);
+      padding: 0.4rem 1.2rem;
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.15s ease both;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 3rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      gap: 1rem;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+
+    .btn {
+      padding: 0.85rem 2.2rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-family: 'Space Mono', monospace;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--accent1);
+      color: white;
+      border: none;
+      box-shadow: 0 0 30px rgba(124,58,237,0.4);
+    }
+
+    .btn-primary:hover {
+      background: #6d28d9;
+      box-shadow: 0 0 50px rgba(124,58,237,0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── SECTION BASE ─── */
+    section {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    .section-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      color: var(--accent1);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .section-line {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      margin-top: 1.2rem;
+      border-radius: 2px;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0 4rem;
+      max-width: calc(100% - 8rem);
+    }
+
+    /* ─── SECTION 1: 수업내용 설명 ─── */
+    #intro .courses-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .course-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .course-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .course-card.web3d::before { background: linear-gradient(90deg, var(--accent1), #a855f7); }
+    .course-card.aiweb::before { background: linear-gradient(90deg, var(--accent2), #3b82f6); }
+
+    .course-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--glow);
+    }
+
+    .course-icon {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .web3d .course-icon { background: rgba(124,58,237,0.15); }
+    .aiweb .course-icon { background: rgba(6,182,212,0.15); }
+
+    .course-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .web3d .course-label { color: var(--accent1); }
+    .aiweb .course-label { color: var(--accent2); }
+
+    .course-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .course-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+
+    .course-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      font-family: 'Space Mono', monospace;
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+    }
+
+    /* ─── SECTION 2 & 3: 수업파일 ─── */
+    .files-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .file-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .web3d-file::after { background: radial-gradient(circle at 50% 0%, rgba(124,58,237,0.08), transparent 70%); }
+    .aiweb-file::after { background: radial-gradient(circle at 50% 0%, rgba(6,182,212,0.08), transparent 70%); }
+
+    .file-card:hover { transform: translateY(-4px); border-color: var(--border); }
+    .file-card:hover::after { opacity: 1; }
+
+    .file-ext {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      display: inline-block;
+      width: fit-content;
+    }
+
+    .ext-pdf { background: rgba(239,68,68,0.15); color: #f87171; }
+    .ext-zip { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .ext-html { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .ext-js { background: rgba(234,179,8,0.15); color: #facc15; }
+    .ext-ppt { background: rgba(236,72,153,0.15); color: #f472b6; }
+    .ext-mp4 { background: rgba(16,185,129,0.15); color: #34d399; }
+
+    .file-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .file-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: 'Space Mono', monospace;
+    }
+
+    .file-week {
+      font-size: 0.7rem;
+      font-family: 'Space Mono', monospace;
+      color: var(--accent3);
+      opacity: 0.7;
+    }
+
+    /* ─── SECTION 4: 갤러리 ─── */
+    #gallery .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+    }
+
+    .gallery-item:first-child {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+
+    .gallery-visual {
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover .gallery-visual {
+      transform: scale(1.06);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      align-items: flex-end;
+      padding: 1.5rem;
+    }
+
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+
+    .gallery-caption {
+      font-size: 0.85rem;
+      font-family: 'Space Mono', monospace;
+      color: white;
+      letter-spacing: 0.05em;
+    }
+
+    /* SVG gallery arts */
+    .gallery-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ─── SECTION 5: 프로필 ─── */
+    #profile .profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 4rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .profile-avatar {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 0 60px rgba(124,58,237,0.4);
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .profile-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 2.4rem;
+      font-weight: 900;
+    }
+
+    .profile-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .profile-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent1);
+      width: 60px;
+      flex-shrink: 0;
+    }
+
+    .profile-val {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .profile-val a {
+      color: var(--accent2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .profile-val a:hover { color: white; text-decoration: underline; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-made {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-made span { color: var(--accent1); }
+
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.5;
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+
+    /* ─── FULL WIDTH SECTIONS ─── */
+    .full-section {
+      background: var(--surface);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .full-section > section { padding: 7rem 4rem; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 1.5rem; }
+      #intro .courses-grid,
+      .files-grid,
+      #gallery .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: span 1; }
+      .profile-card { grid-template-columns: 1fr; text-align: center; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .hero-cta { flex-direction: column; align-items: center; }
     }
   </style>
 </head>
 <body>
-  <h1>VR 콘텐츠 선택</h1>
-  <a href="cube.html">1. 정육면체</a>
-  <a href="cone.html">2. 콘</a>
-  <a href="cylinder.html">3. 실린더</a>
-  <a href="sphere.html">4. 구</a>
-  <a href="cross.html">5. 십자가</a>
-  <a href="cylinder2.html">6. 실린더2</a>
-  <a href="shapes4.html">7. 4개의 도형</a> 
-  <a href="point.html">8. 정육면체</a>
-  <a href="Cylinder3.html">9. 3개의 실린더</a>
-  <a href="indexlineset.html">10. 삼각형</a>
-  <a href="cube2.html">11. 정육면체 2</a>
-  <a href="face.html">12. 삐에로 </a>
-  <a href="scale.html">13. 스케일 </a>
-  <a href="center.html">14. 센터 </a>
-  <a href="background.html">15 백그라운드 </a>
-  <a href="backgroundimg.html">16. 백그라운드 이미지 </a>
- 
 
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">염태훈 · CLASS</div>
+    <ul class="nav-links">
+      <li><a href="#intro">수업소개</a></li>
+      <li><a href="#web3d">Web3D</a></li>
+      <li><a href="#aiweb">AI WEB</a></li>
+      <li><a href="#gallery">갤러리</a></li>
+      <li><a href="#profile">프로필</a></li>
+    </ul>
+  </nav>
+
+  <!-- ① HERO -->
+  <section id="hero" style="max-width:100%; padding:0;">
+    <div id="hero" style="min-height:100vh; display:flex; align-items:center; justify-content:center; position:relative; padding:8rem 4rem 6rem; overflow:hidden;">
+      <div class="hero-grid"></div>
+      <div class="hero-orb orb1"></div>
+      <div class="hero-orb orb2"></div>
+      <div class="hero-content">
+        <div class="hero-tag">📁 CLASS FILES 2024</div>
+        <h1 class="hero-title">
+          염태훈의<br /><span>수업파일</span>
+        </h1>
+        <p class="hero-sub">Web3D와 AI WEB을 탐구하는 창의적 학습 아카이브. 모든 수업자료를 한 곳에서 만나보세요.</p>
+        <div class="hero-cta">
+          <a href="#intro" class="btn btn-primary">수업 둘러보기 →</a>
+          <a href="#gallery" class="btn btn-ghost">갤러리 보기</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② SECTION 1: 수업내용 설명 -->
+  <div class="full-section">
+    <section id="intro">
+      <div class="section-header reveal">
+        <span class="section-num">// 01 — OVERVIEW</span>
+        <h2 class="section-title">수업내용 소개</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="courses-grid">
+        <div class="course-card web3d reveal reveal-delay-1">
+          <div class="course-icon">🌐</div>
+          <span class="course-label">SUBJECT 01</span>
+          <h3 class="course-name">Web3D</h3>
+          <p class="course-desc">
+            웹 기반 3D 그래픽스 기술을 학습하는 과목입니다. WebGL, Three.js 등의 라이브러리를 활용하여
+            브라우저 위에서 동작하는 3D 인터랙티브 콘텐츠를 제작합니다.
+            3D 모델링부터 실시간 렌더링, 애니메이션, 사용자 인터랙션까지 폭넓은 주제를 다룹니다.
+          </p>
+          <div class="course-tags">
+            <span class="tag">Three.js</span>
+            <span class="tag">WebGL</span>
+            <span class="tag">GLSL</span>
+            <span class="tag">3D 모델링</span>
+            <span class="tag">애니메이션</span>
+          </div>
+        </div>
+        <div class="course-card aiweb reveal reveal-delay-2">
+          <div class="course-icon">🤖</div>
+          <span class="course-label">SUBJECT 02</span>
+          <h3 class="course-name">AI WEB</h3>
+          <p class="course-desc">
+            인공지능 기술과 웹 개발을 결합하는 과목입니다. 머신러닝 모델을 웹 애플리케이션에 통합하고,
+            TensorFlow.js, ML5.js 등을 이용한 브라우저 기반 AI 구현을 학습합니다.
+            자연어 처리, 이미지 인식, 생성형 AI 활용 프로젝트를 진행합니다.
+          </p>
+          <div class="course-tags">
+            <span class="tag">TensorFlow.js</span>
+            <span class="tag">ML5.js</span>
+            <span class="tag">NLP</span>
+            <span class="tag">이미지 인식</span>
+            <span class="tag">생성형 AI</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ③ SECTION 2: Web3D 수업파일 -->
+  <section id="web3d">
+    <div class="section-header reveal">
+      <span class="section-num">// 02 — WEB3D FILES</span>
+      <h2 class="section-title">Web3D 수업파일</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="files-grid">
+      <div class="file-card web3d-file reveal reveal-delay-1">
+        <span class="file-week">WEEK 01</span>
+        <span class="file-ext ext-pdf">PDF</span>
+        <div class="file-title">WebGL 기초와 좌표계 이해</div>
+        <div class="file-meta">강의자료 · 2.4 MB</div>
+      </div>
+      <div class="file-card web3d-file reveal reveal-delay-2">
+        <span class="file-week">WEEK 02</span>
+        <span class="file-ext ext-html">HTML</span>
+        <div class="file-title">Three.js 첫 번째 Scene 실습</div>
+        <div class="file-meta">실습파일 · 1.1 MB</div>
+      </div>
+      <div class="file-card web3d-file reveal reveal-delay-3">
+        <span class="file-week">WEEK 03</span>
+        <span class="file-ext ext-zip">ZIP</span>
+        <div class="file-title">3D 기하 도형 및 머티리얼</div>
+        <div class="file-meta">소스코드 · 5.8 MB</div>
+      </div>
+      <div class="file-card web3d-file reveal reveal-delay-4">
+        <span class="file-week">WEEK 04</span>
+        <span class="file-ext ext-pdf">PDF</span>
+        <div class="file-title">조명과 쉐이딩 원리</div>
+        <div class="file-meta">강의자료 · 3.2 MB</div>
+      </div>
+      <div class="file-card web3d-file reveal reveal-delay-5">
+        <span class="file-week">WEEK 05</span>
+        <span class="file-ext ext-js">JS</span>
+        <div class="file-title">애니메이션 & 카메라 컨트롤</div>
+        <div class="file-meta">실습코드 · 820 KB</div>
+      </div>
+      <div class="file-card web3d-file reveal reveal-delay-6">
+        <span class="file-week">WEEK 06</span>
+        <span class="file-ext ext-zip">ZIP</span>
+        <div class="file-title">최종 프로젝트: 인터랙티브 3D</div>
+        <div class="file-meta">프로젝트 파일 · 18 MB</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ SECTION 3: AI WEB 수업파일 -->
+  <div class="full-section">
+    <section id="aiweb">
+      <div class="section-header reveal">
+        <span class="section-num">// 03 — AI WEB FILES</span>
+        <h2 class="section-title">AI WEB 수업파일</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="files-grid">
+        <div class="file-card aiweb-file reveal reveal-delay-1">
+          <span class="file-week">WEEK 01</span>
+          <span class="file-ext ext-pdf">PDF</span>
+          <div class="file-title">웹에서의 AI 개요와 생태계</div>
+          <div class="file-meta">강의자료 · 3.6 MB</div>
+        </div>
+        <div class="file-card aiweb-file reveal reveal-delay-2">
+          <span class="file-week">WEEK 02</span>
+          <span class="file-ext ext-html">HTML</span>
+          <div class="file-title">TensorFlow.js 환경 설정 실습</div>
+          <div class="file-meta">실습파일 · 900 KB</div>
+        </div>
+        <div class="file-card aiweb-file reveal reveal-delay-3">
+          <span class="file-week">WEEK 03</span>
+          <span class="file-ext ext-zip">ZIP</span>
+          <div class="file-title">이미지 분류 모델 구현</div>
+          <div class="file-meta">소스코드 · 12 MB</div>
+        </div>
+        <div class="file-card aiweb-file reveal reveal-delay-4">
+          <span class="file-week">WEEK 04</span>
+          <span class="file-ext ext-ppt">PPT</span>
+          <div class="file-title">자연어 처리 & Chatbot 만들기</div>
+          <div class="file-meta">발표자료 · 7.2 MB</div>
+        </div>
+        <div class="file-card aiweb-file reveal reveal-delay-5">
+          <span class="file-week">WEEK 05</span>
+          <span class="file-ext ext-mp4">MP4</span>
+          <div class="file-title">실시간 포즈 추정 데모 영상</div>
+          <div class="file-meta">강의영상 · 240 MB</div>
+        </div>
+        <div class="file-card aiweb-file reveal reveal-delay-6">
+          <span class="file-week">WEEK 06</span>
+          <span class="file-ext ext-zip">ZIP</span>
+          <div class="file-title">최종 프로젝트: AI 웹 앱</div>
+          <div class="file-meta">프로젝트 파일 · 35 MB</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ⑤ SECTION 4: 갤러리 -->
+  <section id="gallery">
+    <div class="section-header reveal">
+      <span class="section-num">// 04 — GALLERY</span>
+      <h2 class="section-title">작품 갤러리</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="gallery-grid">
+
+      <!-- 갤러리 이미지 1 (Wide): Web3D 우주 씬 -->
+      <div class="gallery-item reveal reveal-delay-1">
+        <svg class="gallery-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="space-bg" cx="50%" cy="50%" r="80%">
+              <stop offset="0%" stop-color="#0d0b2e"/>
+              <stop offset="100%" stop-color="#020108"/>
+            </radialGradient>
+            <radialGradient id="planet1" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="60%" stop-color="#4c1d95"/>
+              <stop offset="100%" stop-color="#1e0a3c"/>
+            </radialGradient>
+            <radialGradient id="planet2" cx="35%" cy="30%" r="60%">
+              <stop offset="0%" stop-color="#06b6d4"/>
+              <stop offset="100%" stop-color="#0e4a6a"/>
+            </radialGradient>
+            <filter id="glow-f">
+              <feGaussianBlur stdDeviation="6" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="soft-glow">
+              <feGaussianBlur stdDeviation="12" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- BG -->
+          <rect width="800" height="450" fill="url(#space-bg)"/>
+          <!-- Stars -->
+          <g opacity="0.8">
+            <circle cx="45" cy="30" r="1" fill="white" opacity="0.9"/>
+            <circle cx="120" cy="80" r="1.5" fill="white" opacity="0.7"/>
+            <circle cx="230" cy="25" r="1" fill="white" opacity="0.8"/>
+            <circle cx="310" cy="60" r="1" fill="white" opacity="0.6"/>
+            <circle cx="420" cy="15" r="1.5" fill="white" opacity="0.9"/>
+            <circle cx="530" cy="45" r="1" fill="white" opacity="0.7"/>
+            <circle cx="620" cy="20" r="1" fill="white" opacity="0.8"/>
+            <circle cx="720" cy="70" r="1.5" fill="white" opacity="0.6"/>
+            <circle cx="760" cy="30" r="1" fill="white" opacity="0.9"/>
+            <circle cx="80" cy="150" r="1" fill="white" opacity="0.6"/>
+            <circle cx="180" cy="200" r="1.5" fill="white" opacity="0.7"/>
+            <circle cx="340" cy="130" r="1" fill="white" opacity="0.8"/>
+            <circle cx="470" cy="100" r="1" fill="white" opacity="0.5"/>
+            <circle cx="580" cy="160" r="1.5" fill="white" opacity="0.9"/>
+            <circle cx="680" cy="120" r="1" fill="white" opacity="0.7"/>
+            <circle cx="740" cy="200" r="1" fill="white" opacity="0.6"/>
+            <circle cx="50" cy="300" r="1" fill="white" opacity="0.8"/>
+            <circle cx="160" cy="350" r="1.5" fill="white" opacity="0.5"/>
+            <circle cx="250" cy="280" r="1" fill="white" opacity="0.7"/>
+            <circle cx="660" cy="300" r="1" fill="white" opacity="0.8"/>
+            <circle cx="780" cy="360" r="1" fill="white" opacity="0.6"/>
+          </g>
+          <!-- Nebula glow -->
+          <ellipse cx="200" cy="220" rx="180" ry="120" fill="rgba(124,58,237,0.08)" filter="url(#soft-glow)"/>
+          <ellipse cx="600" cy="200" rx="150" ry="100" fill="rgba(6,182,212,0.07)" filter="url(#soft-glow)"/>
+          <!-- Planet main (purple) -->
+          <circle cx="280" cy="230" r="120" fill="url(#planet1)" filter="url(#glow-f)"/>
+          <!-- Ring -->
+          <ellipse cx="280" cy="230" rx="190" ry="30" fill="none" stroke="rgba(168,85,247,0.5)" stroke-width="12"/>
+          <ellipse cx="280" cy="230" rx="190" ry="30" fill="none" stroke="rgba(124,58,237,0.3)" stroke-width="22"/>
+          <!-- Planet surface detail -->
+          <path d="M190 210 Q230 195 280 205 Q330 195 370 210" stroke="rgba(167,139,250,0.3)" stroke-width="2" fill="none"/>
+          <path d="M170 235 Q220 220 280 228 Q340 220 390 235" stroke="rgba(167,139,250,0.2)" stroke-width="2" fill="none"/>
+          <!-- Small moon -->
+          <circle cx="460" cy="130" r="38" fill="url(#planet2)" filter="url(#glow-f)"/>
+          <!-- Moon surface -->
+          <circle cx="450" cy="120" r="6" fill="rgba(0,0,0,0.2)"/>
+          <circle cx="468" cy="138" r="4" fill="rgba(0,0,0,0.2)"/>
+          <!-- Wireframe sphere hint -->
+          <g opacity="0.15" stroke="#a78bfa" stroke-width="1" fill="none">
+            <circle cx="650" cy="340" r="70"/>
+            <ellipse cx="650" cy="340" rx="70" ry="25"/>
+            <ellipse cx="650" cy="340" rx="35" ry="70"/>
+            <line x1="580" y1="340" x2="720" y2="340"/>
+            <line x1="650" y1="270" x2="650" y2="410"/>
+          </g>
+          <!-- Label -->
+          <text x="30" y="430" font-family="monospace" font-size="11" fill="rgba(167,139,250,0.6)" letter-spacing="3">WEB3D PROJECT — SPACE SCENE</text>
+        </svg>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Web3D / 우주 인터랙티브 씬</span>
+        </div>
+      </div>
+
+      <!-- 갤러리 이미지 2: AI 신경망 시각화 -->
+      <div class="gallery-item reveal reveal-delay-2">
+        <svg class="gallery-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="nn-bg" cx="50%" cy="50%" r="80%">
+              <stop offset="0%" stop-color="#031a1a"/>
+              <stop offset="100%" stop-color="#020d0d"/>
+            </radialGradient>
+            <filter id="node-glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="400" height="300" fill="url(#nn-bg)"/>
+          <!-- Grid lines -->
+          <g opacity="0.05" stroke="#06b6d4" stroke-width="0.5">
+            <line x1="0" y1="50" x2="400" y2="50"/>
+            <line x1="0" y1="100" x2="400" y2="100"/>
+            <line x1="0" y1="150" x2="400" y2="150"/>
+            <line x1="0" y1="200" x2="400" y2="200"/>
+            <line x1="0" y1="250" x2="400" y2="250"/>
+            <line x1="80" y1="0" x2="80" y2="300"/>
+            <line x1="160" y1="0" x2="160" y2="300"/>
+            <line x1="240" y1="0" x2="240" y2="300"/>
+            <line x1="320" y1="0" x2="320" y2="300"/>
+          </g>
+          <!-- Connections Layer 1→2 -->
+          <g stroke="rgba(6,182,212,0.15)" stroke-width="1">
+            <line x1="70" y1="75" x2="160" y2="60"/>
+            <line x1="70" y1="75" x2="160" y2="120"/>
+            <line x1="70" y1="75" x2="160" y2="180"/>
+            <line x1="70" y1="150" x2="160" y2="60"/>
+            <line x1="70" y1="150" x2="160" y2="120"/>
+            <line x1="70" y1="150" x2="160" y2="180"/>
+            <line x1="70" y1="225" x2="160" y2="60"/>
+            <line x1="70" y1="225" x2="160" y2="120"/>
+            <line x1="70" y1="225" x2="160" y2="180"/>
+            <line x1="70" y1="225" x2="160" y2="240"/>
+            <line x1="70" y1="150" x2="160" y2="240"/>
+            <line x1="70" y1="75" x2="160" y2="240"/>
+          </g>
+          <!-- Connections Layer 2→3 -->
+          <g stroke="rgba(124,58,237,0.15)" stroke-width="1">
+            <line x1="160" y1="60" x2="250" y2="90"/>
+            <line x1="160" y1="60" x2="250" y2="150"/>
+            <line x1="160" y1="60" x2="250" y2="210"/>
+            <line x1="160" y1="120" x2="250" y2="90"/>
+            <line x1="160" y1="120" x2="250" y2="150"/>
+            <line x1="160" y1="120" x2="250" y2="210"/>
+            <line x1="160" y1="180" x2="250" y2="90"/>
+            <line x1="160" y1="180" x2="250" y2="150"/>
+            <line x1="160" y1="180" x2="250" y2="210"/>
+            <line x1="160" y1="240" x2="250" y2="90"/>
+            <line x1="160" y1="240" x2="250" y2="150"/>
+            <line x1="160" y1="240" x2="250" y2="210"/>
+          </g>
+          <!-- Connections Layer 3→4 -->
+          <g stroke="rgba(6,182,212,0.2)" stroke-width="1.2">
+            <line x1="250" y1="90" x2="340" y2="105"/>
+            <line x1="250" y1="90" x2="340" y2="195"/>
+            <line x1="250" y1="150" x2="340" y2="105"/>
+            <line x1="250" y1="150" x2="340" y2="195"/>
+            <line x1="250" y1="210" x2="340" y2="105"/>
+            <line x1="250" y1="210" x2="340" y2="195"/>
+          </g>
+          <!-- Layer 1 nodes -->
+          <g filter="url(#node-glow)">
+            <circle cx="70" cy="75" r="10" fill="#06b6d4" opacity="0.9"/>
+            <circle cx="70" cy="150" r="10" fill="#06b6d4" opacity="0.9"/>
+            <circle cx="70" cy="225" r="10" fill="#06b6d4" opacity="0.9"/>
+          </g>
+          <!-- Layer 2 nodes -->
+          <g filter="url(#node-glow)">
+            <circle cx="160" cy="60" r="9" fill="#7c3aed" opacity="0.9"/>
+            <circle cx="160" cy="120" r="9" fill="#7c3aed" opacity="0.9"/>
+            <circle cx="160" cy="180" r="9" fill="#7c3aed" opacity="0.9"/>
+            <circle cx="160" cy="240" r="9" fill="#7c3aed" opacity="0.9"/>
+          </g>
+          <!-- Layer 3 nodes -->
+          <g filter="url(#node-glow)">
+            <circle cx="250" cy="90" r="9" fill="#a855f7" opacity="0.9"/>
+            <circle cx="250" cy="150" r="9" fill="#a855f7" opacity="0.9"/>
+            <circle cx="250" cy="210" r="9" fill="#a855f7" opacity="0.9"/>
+          </g>
+          <!-- Output nodes -->
+          <g filter="url(#node-glow)">
+            <circle cx="340" cy="105" r="12" fill="#f59e0b" opacity="0.9"/>
+            <circle cx="340" cy="195" r="12" fill="#34d399" opacity="0.9"/>
+          </g>
+          <!-- Layer labels -->
+          <text x="55" y="265" font-family="monospace" font-size="9" fill="rgba(6,182,212,0.5)" text-anchor="middle">INPUT</text>
+          <text x="160" y="265" font-family="monospace" font-size="9" fill="rgba(124,58,237,0.5)" text-anchor="middle">HIDDEN</text>
+          <text x="250" y="265" font-family="monospace" font-size="9" fill="rgba(168,85,247,0.5)" text-anchor="middle">HIDDEN</text>
+          <text x="340" y="265" font-family="monospace" font-size="9" fill="rgba(245,158,11,0.5)" text-anchor="middle">OUTPUT</text>
+          <text x="20" y="290" font-family="monospace" font-size="9" fill="rgba(6,182,212,0.4)" letter-spacing="2">AI WEB — NEURAL NET VIZ</text>
+        </svg>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">AI WEB / 신경망 시각화</span>
+        </div>
+      </div>
+
+      <!-- 갤러리 이미지 3: 3D 와이어프레임 도시 -->
+      <div class="gallery-item reveal reveal-delay-3">
+        <svg class="gallery-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="city-sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#050a1a"/>
+              <stop offset="100%" stop-color="#0a1428"/>
+            </linearGradient>
+            <filter id="city-glow">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="400" height="300" fill="url(#city-sky)"/>
+          <!-- Horizon glow -->
+          <ellipse cx="200" cy="200" rx="280" ry="50" fill="rgba(124,58,237,0.12)" filter="url(#city-glow)"/>
+          <!-- Grid floor (perspective) -->
+          <g stroke="rgba(124,58,237,0.2)" stroke-width="0.7">
+            <!-- horizontal lines -->
+            <line x1="0" y1="200" x2="400" y2="200"/>
+            <line x1="20" y1="215" x2="380" y2="215"/>
+            <line x1="40" y1="232" x2="360" y2="232"/>
+            <line x1="60" y1="252" x2="340" y2="252"/>
+            <line x1="80" y1="275" x2="320" y2="275"/>
+            <!-- vanishing lines -->
+            <line x1="200" y1="200" x2="0" y2="300"/>
+            <line x1="200" y1="200" x2="50" y2="300"/>
+            <line x1="200" y1="200" x2="100" y2="300"/>
+            <line x1="200" y1="200" x2="150" y2="300"/>
+            <line x1="200" y1="200" x2="200" y2="300"/>
+            <line x1="200" y1="200" x2="250" y2="300"/>
+            <line x1="200" y1="200" x2="300" y2="300"/>
+            <line x1="200" y1="200" x2="350" y2="300"/>
+            <line x1="200" y1="200" x2="400" y2="300"/>
+          </g>
+          <!-- Buildings wireframe -->
+          <g stroke="#7c3aed" stroke-width="1" fill="rgba(124,58,237,0.04)" filter="url(#city-glow)">
+            <!-- Building 1 -->
+            <rect x="50" y="110" width="40" height="90"/>
+            <line x1="50" y1="110" x2="65" y2="95"/><line x1="90" y1="110" x2="105" y2="95"/>
+            <line x1="65" y1="95" x2="105" y2="95"/><rect x="65" y1="95" width="40" height="15" fill="rgba(124,58,237,0.08)"/>
+            <!-- Windows -->
+            <rect x="57" y="120" width="8" height="8" fill="rgba(245,158,11,0.4)"/>
+            <rect x="72" y="120" width="8" height="8" fill="rgba(6,182,212,0.3)"/>
+            <rect x="57" y="137" width="8" height="8" fill="rgba(6,182,212,0.3)"/>
+            <rect x="72" y="137" width="8" height="8" fill="rgba(245,158,11,0.4)"/>
+            <rect x="57" y="154" width="8" height="8" fill="rgba(245,158,11,0.3)"/>
+            <rect x="72" y="154" width="8" height="8" fill="rgba(6,182,212,0.4)"/>
+          </g>
+          <!-- Building 2 (tall center) -->
+          <g stroke="#06b6d4" stroke-width="1" fill="rgba(6,182,212,0.04)" filter="url(#city-glow)">
+            <rect x="165" y="60" width="50" height="140"/>
+            <line x1="165" y1="60" x2="185" y2="40"/><line x1="215" y1="60" x2="235" y2="40"/>
+            <line x1="185" y1="40" x2="235" y2="40"/>
+            <!-- Windows -->
+            <rect x="173" y="72" width="8" height="8" fill="rgba(6,182,212,0.4)"/>
+            <rect x="188" y="72" width="8" height="8" fill="rgba(245,158,11,0.4)"/>
+            <rect x="203" y="72" width="8" height="8" fill="rgba(6,182,212,0.3)"/>
+            <rect x="173" y="90" width="8" height="8" fill="rgba(245,158,11,0.3)"/>
+            <rect x="188" y="90" width="8" height="8" fill="rgba(6,182,212,0.4)"/>
+            <rect x="203" y="90" width="8" height="8" fill="rgba(245,158,11,0.4)"/>
+            <rect x="173" y="108" width="8" height="8" fill="rgba(6,182,212,0.3)"/>
+            <rect x="188" y="108" width="8" height="8" fill="rgba(245,158,11,0.3)"/>
+            <rect x="203" y="108" width="8" height="8" fill="rgba(6,182,212,0.4)"/>
+            <rect x="173" y="126" width="8" height="8" fill="rgba(245,158,11,0.4)"/>
+            <rect x="188" y="126" width="8" height="8" fill="rgba(6,182,212,0.3)"/>
+            <rect x="203" y="126" width="8" height="8" fill="rgba(245,158,11,0.3)"/>
+            <!-- Antenna -->
+            <line x1="190" y1="40" x2="190" y2="20" stroke="#06b6d4" stroke-width="1.5"/>
+            <circle cx="190" cy="18" r="3" fill="#06b6d4" opacity="0.9"/>
+          </g>
+          <!-- Building 3 (right) -->
+          <g stroke="#a855f7" stroke-width="1" fill="rgba(168,85,247,0.04)" filter="url(#city-glow)">
+            <rect x="290" y="130" width="45" height="70"/>
+            <line x1="290" y1="130" x2="305" y2="115"/><line x1="335" y1="130" x2="350" y2="115"/>
+            <line x1="305" y1="115" x2="350" y2="115"/>
+            <rect x="298" y="140" width="7" height="7" fill="rgba(168,85,247,0.4)"/>
+            <rect x="312" y="140" width="7" height="7" fill="rgba(245,158,11,0.3)"/>
+            <rect x="298" y="157" width="7" height="7" fill="rgba(245,158,11,0.4)"/>
+            <rect x="312" y="157" width="7" height="7" fill="rgba(168,85,247,0.3)"/>
+          </g>
+          <!-- Stars -->
+          <circle cx="80" cy="40" r="1" fill="white" opacity="0.6"/>
+          <circle cx="150" cy="20" r="1" fill="white" opacity="0.8"/>
+          <circle cx="300" cy="30" r="1.5" fill="white" opacity="0.7"/>
+          <circle cx="350" cy="55" r="1" fill="white" opacity="0.5"/>
+          <circle cx="30" cy="70" r="1" fill="white" opacity="0.7"/>
+          <text x="20" y="290" font-family="monospace" font-size="9" fill="rgba(168,85,247,0.4)" letter-spacing="2">WEB3D — WIREFRAME CITY</text>
+        </svg>
+        <div class="gallery-overlay">
+          <span class="gallery-caption">Web3D / 와이어프레임 도시</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ⑥ SECTION 5: 프로필 정보 -->
+  <div class="full-section">
+    <section id="profile">
+      <div class="section-header reveal">
+        <span class="section-num">// 05 — PROFILE</span>
+        <h2 class="section-title">학생 정보</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="profile-card reveal">
+        <div class="profile-avatar">염</div>
+        <div class="profile-info">
+          <div class="profile-name">염태훈</div>
+          <div class="profile-rows">
+            <div class="profile-row">
+              <span class="profile-key">이름</span>
+              <span class="profile-val">염태훈</span>
+            </div>
+            <div class="profile-row">
+              <span class="profile-key">학번</span>
+              <span class="profile-val" style="font-family:'Space Mono',monospace; font-size:0.9rem; letter-spacing:0.1em;">20XXXXXXXX</span>
+            </div>
+            <div class="profile-row">
+              <span class="profile-key">이메일</span>
+              <span class="profile-val">
+                <a href="mailto:example@university.ac.kr">example@university.ac.kr</a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-made">만든이 : <span>염태훈</span></div>
+    <div class="footer-copy">© 2024 염태훈 · All Rights Reserved</div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Nav active state
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      document.querySelectorAll('[id]').forEach(sec => {
+        const top = sec.offsetTop - 120;
+        if (window.scrollY >= top) current = sec.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current
+          ? 'var(--accent2)' : '';
+      });
+    });
+  </script>
 </body>
 </html>
